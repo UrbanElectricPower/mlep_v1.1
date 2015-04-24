@@ -97,6 +97,8 @@ mlep = mlepBacnet(myhandle);
 MatlabVersion = getversion;
 if MatlabVersion == 8
     set(mlep.guiTab,'SelectionChangeFcn', @(obj,evt) selectionChangeCbk(obj,evt)); % Formerly SelectionChangeFcn
+elseif MatlabVersion >=8.4
+    set(mlep.guiTab,'SelectionChangedFcn', @(obj,evt) selectionChangeCbk(obj,evt)); % Apparently Now SelectionChangedFcn
 else
     set(mlep.guiTab,'SelectionChangeCallback', @(obj,evt) selectionChangeCbk(obj,evt)); % Formerly SelectionChangeFcn
 end
@@ -105,12 +107,21 @@ end
 % Get the underlying Java reference (use hidden property)
 jTabGroup = getappdata(handle(mlep.guiTab),'JTabbedPane');
 % Equivalent manners to set a red tab foreground:
+if isempty(jTabGroup)
+    set(mlep.guiTab.Children(1), 'Title', '1.  Start');
+        set(mlep.guiTab.Children(2), 'Title', '2. System ID');
+        set(mlep.guiTab.Children(3), 'Title', '3. Control');
+        set(mlep.guiTab.Children(4), 'Title', '4. Simulation');
+        set(mlep.guiTab.Children(5), 'Title', '5. BACnet');
+else    
+    
 % jTabGroup.setForegroundAt(1,java.awt.Color(1.0,0,0)); % tab #1
-jTabGroup.setTitleAt(0,'<html><font face="helvetica", color="black",size=5>1. Start');
-jTabGroup.setTitleAt(1,'<html><font face="helvetica", color="black",size=5>2. System ID');
-jTabGroup.setTitleAt(2,'<html><font face="helvetica", color="black",size=5>3. Control');
-jTabGroup.setTitleAt(3,'<html><font face="helvetica", color="black",size=5>4. Simulation');
-jTabGroup.setTitleAt(4,'<html><font face="helvetica", color="black",size=5>5. BACnet');
+    jTabGroup.setTitleAt(0,'<html><font face="helvetica", color="black",size=5>1. Start');
+    jTabGroup.setTitleAt(1,'<html><font face="helvetica", color="black",size=5>2. System ID');
+    jTabGroup.setTitleAt(2,'<html><font face="helvetica", color="black",size=5>3. Control');
+    jTabGroup.setTitleAt(3,'<html><font face="helvetica", color="black",size=5>4. Simulation');
+    jTabGroup.setTitleAt(4,'<html><font face="helvetica", color="black",size=5>5. BACnet');
+end
 %jTabGroup.setTitleAt(2,'<html><div style="background:#ffff00">3. CONTROL');'<html><b><i><font size=+2>Tab #2'
 % jTabGroup.setForeground(java.awt.Color.red);
 
